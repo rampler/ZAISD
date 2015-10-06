@@ -1,6 +1,6 @@
-package pl.agh.mkotlarz.zaids;
+package pl.agh.mkotlarz.zaids.graph;
 
-import pl.agh.mkotlarz.zaids.exceptions.NodeNotFoundException;
+import pl.agh.mkotlarz.zaids.graph.exceptions.NodeNotFoundException;
 
 /**
  * Created by Mateusz on 06.10.2015.
@@ -126,8 +126,10 @@ public class MatrixGraph implements Graph {
         int actualNeighborIndex = 0;
 
         for(int i=1; i<=actualSize; i++)
-            if(matrix[nodeMatrixIndex][i] != null)
-                neighbors[actualNeighborIndex] = ((GraphEdge)matrix[nodeMatrixIndex][i]).getSecondNode();
+            if(matrix[nodeMatrixIndex][i] != null) {
+                neighbors[actualNeighborIndex] = ((GraphEdge) matrix[nodeMatrixIndex][i]).getSecondNode();
+                actualNeighborIndex++;
+            }
 
         return neighbors;
     }

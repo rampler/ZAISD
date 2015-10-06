@@ -1,4 +1,4 @@
-package pl.agh.mkotlarz.zaids;
+package pl.agh.mkotlarz.zaids.graph;
 
 /**
  * Created by Mateusz on 06.10.2015.

@@ -1,6 +1,6 @@
-package pl.agh.mkotlarz.zaids;
+package pl.agh.mkotlarz.zaids.graph;
 
-import pl.agh.mkotlarz.zaids.exceptions.NodeNotFoundException;
+import pl.agh.mkotlarz.zaids.graph.exceptions.NodeNotFoundException;
 
 /**
  * Created by Mateusz on 06.10.2015.

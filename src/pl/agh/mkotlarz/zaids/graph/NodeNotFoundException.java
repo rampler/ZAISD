@@ -1,4 +1,4 @@
-package pl.agh.mkotlarz.zaids.exceptions;
+package pl.agh.mkotlarz.zaids.graph.exceptions;
 
 /**
  * Created by Mateusz on 06.10.2015.
