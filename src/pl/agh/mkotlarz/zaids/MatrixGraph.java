@@ -14,7 +14,7 @@ public class MatrixGraph implements Graph {
     /* Constructors */
     public MatrixGraph(int initSize){
         matrix = new Object[initSize][initSize];
-        
+
     }
 
     public MatrixGraph() {
