@@ -102,13 +102,13 @@ public class ListGraph implements Graph {
     public void deleteEdge(GraphEdge graphEdge) throws NodeNotFoundException, EdgeNotFoundException {
         int primaryNodeIndex = findNodeArrayIndex(graphEdge.getFirstNode());
         ListGraphEdge actualEdge = nodes[primaryNodeIndex].getFirstEdge();
-        while(actualEdge != null && actualEdge.getSecondNode() != graphEdge.getSecondNode())
+        while(actualEdge != null && !actualEdge.getSecondNode().equals(graphEdge.getSecondNode()))
             actualEdge = actualEdge.getNextEdge();
 
         if(actualEdge == null) throw new EdgeNotFoundException(graphEdge);
         else {
-            actualEdge.getPrevEdge().setNextEdge(actualEdge.getNextEdge());
-            actualEdge.getNextEdge().setPrevEdge(actualEdge.getPrevEdge());
+            if(actualEdge.getPrevEdge() != null) actualEdge.getPrevEdge().setNextEdge(actualEdge.getNextEdge());
+            if(actualEdge.getNextEdge() != null) actualEdge.getNextEdge().setPrevEdge(actualEdge.getPrevEdge());
         }
     }
 
@@ -136,26 +136,30 @@ public class ListGraph implements Graph {
     }
 
     @Override
-    public GraphEdge[] getIncidentalEdges(GraphNode graphNode) throws NodeNotFoundException {
+    public GraphEdge[] getIncidentalEdges() throws NodeNotFoundException {
         int edgesCount = 0;
-        int primaryNodeIndex = findNodeArrayIndex(graphNode);
 
-        ListGraphEdge actualEdge = nodes[primaryNodeIndex].getFirstEdge();
-        while(actualEdge != null) {
-            if(actualEdge.getFirstNode().equals(actualEdge.getSecondNode()))
-                edgesCount++;
-            actualEdge = actualEdge.getNextEdge();
+        for(int i=0; i<actualSize; i++){
+            ListGraphEdge actualEdge = nodes[i].getFirstEdge();
+            while (actualEdge != null) {
+                if (actualEdge.getFirstNode().equals(actualEdge.getSecondNode()))
+                    edgesCount++;
+                actualEdge = actualEdge.getNextEdge();
+            }
         }
 
         GraphEdge[] neighbors = new GraphEdge[edgesCount];
-        int actualPosition = 0;
-        actualEdge = nodes[primaryNodeIndex].getFirstEdge();
-        while(actualPosition < edgesCount) {
-            if(actualEdge.getFirstNode().equals(actualEdge.getSecondNode())) {
-                neighbors[actualPosition] = actualEdge;
-                actualPosition++;
+
+        for(int i=0; i<actualSize; i++){
+            int actualPosition = 0;
+            ListGraphEdge actualEdge = nodes[i].getFirstEdge();
+            while (actualPosition < edgesCount) {
+                if (actualEdge.getFirstNode().equals(actualEdge.getSecondNode())) {
+                    neighbors[actualPosition] = actualEdge;
+                    actualPosition++;
+                }
+                actualEdge = actualEdge.getNextEdge();
             }
-            actualEdge = actualEdge.getNextEdge();
         }
 
         return neighbors;
@@ -180,12 +184,17 @@ public class ListGraph implements Graph {
     }
 
     @Override
-    public boolean isNodesNeighbors(GraphNode graphNode1, GraphNode graphNode2) throws NodeNotFoundException {
-        int firstNodeIndex = findNodeArrayIndex(graphNode1);
-        ListGraphEdge actualEdge = nodes[firstNodeIndex].getFirstEdge();
-        while(actualEdge != null && actualEdge.getSecondNode() != graphNode2) {
-            actualEdge = actualEdge.getNextEdge();
+    public boolean isNodesNeighbors(GraphNode graphNode1, GraphNode graphNode2) {
+        try {
+            int firstNodeIndex = findNodeArrayIndex(graphNode1);
+            ListGraphEdge actualEdge = nodes[firstNodeIndex].getFirstEdge();
+            while (actualEdge != null && actualEdge.getSecondNode() != graphNode2) {
+                actualEdge = actualEdge.getNextEdge();
+            }
+            return (actualEdge != null);
         }
-        return (actualEdge != null);
+        catch (NodeNotFoundException ex) {
+            return false;
+        }
     }
 }

@@ -74,7 +74,7 @@ public class MatrixGraph implements Graph {
         int nodeInMatrixIndex = findNodeMatrixIndex(graphNode);
 
         for(int i=nodeInMatrixIndex; i <= actualSize; i++)
-            for(int j=0; j <= actualSize; i++)
+            for(int j=0; j <= actualSize; j++)
                 if(i != actualSize)
                     matrix[i][j] = matrix[i+1][j];
                 else
@@ -135,16 +135,16 @@ public class MatrixGraph implements Graph {
     }
 
     @Override
-    public GraphEdge[] getIncidentalEdges(GraphNode graphNode) {
+    public GraphEdge[] getIncidentalEdges() {
         int incidentalCount = 0;
         for(int i=1; i<matrix.length; i++)
-            if(((GraphEdge)matrix[i][i]).getFirstNode().equals(((GraphEdge)matrix[i][i]).getSecondNode()))
+            if(matrix[i][i] != null && ((GraphEdge)matrix[i][i]).getFirstNode().equals(((GraphEdge)matrix[i][i]).getSecondNode()))
                 incidentalCount++;
 
         GraphEdge[] incidentalList = new GraphEdge[incidentalCount];
         int actualElementIndex = 0;
         for(int i=1; i<matrix.length; i++)
-            if(((GraphEdge)matrix[i][i]).getFirstNode().equals(((GraphEdge)matrix[i][i]).getSecondNode())) {
+            if(matrix[i][i] != null && ((GraphEdge)matrix[i][i]).getFirstNode().equals(((GraphEdge)matrix[i][i]).getSecondNode())) {
                 incidentalList[actualElementIndex] = (GraphEdge)matrix[i][i];
                 actualElementIndex++;
             }
@@ -168,10 +168,15 @@ public class MatrixGraph implements Graph {
     }
 
     @Override
-    public boolean isNodesNeighbors(GraphNode graphNode1, GraphNode graphNode2) throws NodeNotFoundException {
-        int firstNodeMatrixIndex = findNodeMatrixIndex(graphNode1);
-        int secondNodeMatrixIndex = findNodeMatrixIndex(graphNode2);
+    public boolean isNodesNeighbors(GraphNode graphNode1, GraphNode graphNode2) {
+        try {
+            int firstNodeMatrixIndex = findNodeMatrixIndex(graphNode1);
+            int secondNodeMatrixIndex = findNodeMatrixIndex(graphNode2);
 
-        return matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] != null || matrix[secondNodeMatrixIndex][firstNodeMatrixIndex] != null;
+            return matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] != null || matrix[secondNodeMatrixIndex][firstNodeMatrixIndex] != null;
+        } catch (NodeNotFoundException e) {
+            return false;
+        }
+
     }
 }

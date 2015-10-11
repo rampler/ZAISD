@@ -1,8 +1,9 @@
 package pl.agh.mkotlarz.zaids.graph.test;
 
-import pl.agh.mkotlarz.zaids.graph.Graph;
-import pl.agh.mkotlarz.zaids.graph.ListGraph;
-import pl.agh.mkotlarz.zaids.graph.MatrixGraph;
+import com.sun.org.apache.xpath.internal.SourceTree;
+import pl.agh.mkotlarz.zaids.graph.*;
+import pl.agh.mkotlarz.zaids.graph.exceptions.EdgeNotFoundException;
+import pl.agh.mkotlarz.zaids.graph.exceptions.NodeNotFoundException;
 import pl.agh.mkotlarz.zaids.importer.GraphImporter;
 
 import java.io.FileNotFoundException;
@@ -14,27 +15,48 @@ public class MainTest {
 
     public static void main(String args[]) {
         try {
-            testListGraph();
+            System.out.println("Testing Matrix Graph");
+            Graph matrixGraph = new MatrixGraph();
+            testPrimaryFunctions(matrixGraph);
+
+            System.out.println("Testing List Graph");
+            Graph listGraph = new ListGraph();
+            testPrimaryFunctions(listGraph);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void testMatrixGraph() throws FileNotFoundException {
-        System.out.println("Testing Matrix Graph");
+    public static void testPrimaryFunctions(Graph graph) throws FileNotFoundException, NodeNotFoundException, EdgeNotFoundException {
         long startTime = System.currentTimeMillis();
-        Graph graph = new MatrixGraph();
-//        GraphImporter.importGraphFromConsole(graph);
-        GraphImporter.importGraphFromFile(graph, "graf.txt");
-        System.out.println("DONE!!! Time: "+(System.currentTimeMillis() - startTime)+" ms.");
-    }
 
-    public static void testListGraph() throws FileNotFoundException {
-        System.out.println("Testing List Graph");
-        long startTime = System.currentTimeMillis();
-        Graph graph = new ListGraph();
-//        GraphImporter.importGraphFromConsole(graph);
+        //Loading graph
         GraphImporter.importGraphFromFile(graph, "graf.txt");
-        System.out.println("DONE!!! Time: "+(System.currentTimeMillis() - startTime)+" ms.");
+        System.out.println("Graph loaded!!! Time: "+(System.currentTimeMillis() - startTime)+" ms.");
+
+        //Deleting node
+        graph.deleteNode(new GraphNode(1));
+
+        //Delete edge
+        graph.deleteEdge(new GraphEdge(new GraphNode(15), new GraphNode(5), 54));
+
+        //Get neighbors
+        GraphNode[] neighbors = graph.getNeighborNodes(new GraphNode(19));
+
+        //Get incidental
+        GraphEdge[] incidental = graph.getIncidentalEdges();
+
+        //Nodes count
+        int nodesCount = graph.getNodesCount();
+
+        //Edges count
+        int edgesCount = graph.getEdgesCount();
+
+        //Is neighbor
+        boolean test1 = graph.isNodesNeighbors(new GraphNode(1), new GraphNode(31));
+        boolean test2 = graph.isNodesNeighbors(new GraphNode(5), new GraphNode(9));
+
+        System.out.println("Total Test Time: "+(System.currentTimeMillis() - startTime)+" ms.");
+        System.out.println("");
     }
 }

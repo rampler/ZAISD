@@ -13,7 +13,7 @@ public interface Graph {
     void addEdge(GraphEdge graphEdge);
     void deleteEdge(GraphEdge graphEdge) throws NodeNotFoundException, EdgeNotFoundException;
     GraphNode[] getNeighborNodes(GraphNode graphNode) throws NodeNotFoundException;
-    GraphEdge[] getIncidentalEdges(GraphNode graphNode) throws NodeNotFoundException;
+    GraphEdge[] getIncidentalEdges() throws NodeNotFoundException;
     int getNodesCount();
     int getEdgesCount();
     boolean isNodesNeighbors(GraphNode graphNode1, GraphNode graphNode2) throws NodeNotFoundException;
