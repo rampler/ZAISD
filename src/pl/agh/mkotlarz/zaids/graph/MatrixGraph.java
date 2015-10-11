@@ -136,8 +136,20 @@ public class MatrixGraph implements Graph {
 
     @Override
     public GraphEdge[] getIncidentalEdges(GraphNode graphNode) {
-        //TODO
-        return new GraphEdge[0];
+        int incidentalCount = 0;
+        for(int i=1; i<matrix.length; i++)
+            if(((GraphEdge)matrix[i][i]).getFirstNode() == ((GraphEdge)matrix[i][i]).getSecondNode())
+                incidentalCount++;
+
+        GraphEdge[] incidentalList = new GraphEdge[incidentalCount];
+        int actualElementIndex = 0;
+        for(int i=1; i<matrix.length; i++)
+            if(((GraphEdge)matrix[i][i]).getFirstNode() == ((GraphEdge)matrix[i][i]).getSecondNode()) {
+                incidentalList[actualElementIndex] = (GraphEdge)matrix[i][i];
+                actualElementIndex++;
+            }
+
+        return incidentalList;
     }
 
     @Override
