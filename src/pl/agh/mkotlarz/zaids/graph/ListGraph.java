@@ -34,10 +34,10 @@ public class ListGraph implements Graph {
 
     private int findNodeArrayIndex(GraphNode graphNode) throws NodeNotFoundException {
         int nodeInArrayIndex = 0;
-        while(nodeInArrayIndex < nodes.length && !graphNode.equals(nodes[nodeInArrayIndex].getGraphNode()))
+        while(nodeInArrayIndex < actualSize && !graphNode.equals(nodes[nodeInArrayIndex].getGraphNode()))
             nodeInArrayIndex++;
 
-        if(nodeInArrayIndex == nodes.length)
+        if(nodeInArrayIndex == actualSize)
             throw new NodeNotFoundException(graphNode);
 
         return nodeInArrayIndex;
