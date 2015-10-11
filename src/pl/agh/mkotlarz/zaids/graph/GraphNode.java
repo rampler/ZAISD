@@ -13,4 +13,14 @@ public class GraphNode {
     public int getNodeId() {
         return nodeId;
     }
+
+    @Override
+    public String toString() {
+        return nodeId+"";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof GraphNode && ((GraphNode)obj).getNodeId() == nodeId);
+    }
 }

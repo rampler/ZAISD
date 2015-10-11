@@ -25,4 +25,9 @@ public class GraphEdge {
     public int getWeight() {
         return weight;
     }
+
+    @Override
+    public String toString() {
+        return "(" + firstNode + "," + secondNode + "," + weight + ')';
+    }
 }

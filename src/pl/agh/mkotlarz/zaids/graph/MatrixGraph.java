@@ -38,7 +38,7 @@ public class MatrixGraph implements Graph {
             nodeInMatrixIndex++;
 
         if(nodeInMatrixIndex == matrix.length)
-            throw new NodeNotFoundException();
+            throw new NodeNotFoundException(graphNode);
 
         return nodeInMatrixIndex;
     }
@@ -138,7 +138,7 @@ public class MatrixGraph implements Graph {
     public GraphEdge[] getIncidentalEdges(GraphNode graphNode) {
         int incidentalCount = 0;
         for(int i=1; i<matrix.length; i++)
-            if(((GraphEdge)matrix[i][i]).getFirstNode() == ((GraphEdge)matrix[i][i]).getSecondNode())
+            if(((GraphEdge)matrix[i][i]).getFirstNode().getNodeId() == ((GraphEdge)matrix[i][i]).getSecondNode().getNodeId())
                 incidentalCount++;
 
         GraphEdge[] incidentalList = new GraphEdge[incidentalCount];
