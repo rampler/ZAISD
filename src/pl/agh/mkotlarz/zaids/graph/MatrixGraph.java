@@ -25,7 +25,7 @@ public class MatrixGraph implements Graph {
     /* Private methods */
 
     private void makeMatrixBigger(int step){
-        Object[][] newMatrix = new Object[actualSize + step][actualSize + step];
+        Object[][] newMatrix = new Object[matrix.length + step][matrix.length + step];
         for(int i=0; i < matrix.length; i++)
             for(int j=0; j< matrix[i].length; j++)
                 newMatrix[i][j] = matrix[i][j];
@@ -34,7 +34,7 @@ public class MatrixGraph implements Graph {
 
     private int findNodeMatrixIndex(GraphNode graphNode) throws NodeNotFoundException {
         int nodeInMatrixIndex = 0;
-        while(nodeInMatrixIndex < matrix.length && matrix[nodeInMatrixIndex][0] == graphNode)
+        while(nodeInMatrixIndex < matrix.length && !graphNode.equals(matrix[nodeInMatrixIndex][0]))
             nodeInMatrixIndex++;
 
         if(nodeInMatrixIndex == matrix.length)
@@ -59,7 +59,7 @@ public class MatrixGraph implements Graph {
             findNodeMatrixIndex(graphNode);
         }
         catch (NodeNotFoundException ex){
-            if(matrix.length == actualSize)
+            if(matrix.length-1 == actualSize)
                 makeMatrixBigger(DEFAULT_STEP_SIZE);
 
             matrix[actualSize+1][0] = graphNode;
@@ -138,13 +138,13 @@ public class MatrixGraph implements Graph {
     public GraphEdge[] getIncidentalEdges(GraphNode graphNode) {
         int incidentalCount = 0;
         for(int i=1; i<matrix.length; i++)
-            if(((GraphEdge)matrix[i][i]).getFirstNode().getNodeId() == ((GraphEdge)matrix[i][i]).getSecondNode().getNodeId())
+            if(((GraphEdge)matrix[i][i]).getFirstNode().equals(((GraphEdge)matrix[i][i]).getSecondNode()))
                 incidentalCount++;
 
         GraphEdge[] incidentalList = new GraphEdge[incidentalCount];
         int actualElementIndex = 0;
         for(int i=1; i<matrix.length; i++)
-            if(((GraphEdge)matrix[i][i]).getFirstNode() == ((GraphEdge)matrix[i][i]).getSecondNode()) {
+            if(((GraphEdge)matrix[i][i]).getFirstNode().equals(((GraphEdge)matrix[i][i]).getSecondNode())) {
                 incidentalList[actualElementIndex] = (GraphEdge)matrix[i][i];
                 actualElementIndex++;
             }

@@ -34,7 +34,7 @@ public class ListGraph implements Graph {
 
     private int findNodeArrayIndex(GraphNode graphNode) throws NodeNotFoundException {
         int nodeInArrayIndex = 0;
-        while(nodeInArrayIndex < nodes.length && nodes[nodeInArrayIndex].getGraphNode() == graphNode)
+        while(nodeInArrayIndex < nodes.length && !graphNode.equals(nodes[nodeInArrayIndex].getGraphNode()))
             nodeInArrayIndex++;
 
         if(nodeInArrayIndex == nodes.length)
@@ -142,7 +142,7 @@ public class ListGraph implements Graph {
 
         ListGraphEdge actualEdge = nodes[primaryNodeIndex].getFirstEdge();
         while(actualEdge != null) {
-            if(actualEdge.getFirstNode() == actualEdge.getSecondNode())
+            if(actualEdge.getFirstNode().equals(actualEdge.getSecondNode()))
                 edgesCount++;
             actualEdge = actualEdge.getNextEdge();
         }
@@ -151,7 +151,7 @@ public class ListGraph implements Graph {
         int actualPosition = 0;
         actualEdge = nodes[primaryNodeIndex].getFirstEdge();
         while(actualPosition < edgesCount) {
-            if(actualEdge.getFirstNode() == actualEdge.getSecondNode()) {
+            if(actualEdge.getFirstNode().equals(actualEdge.getSecondNode())) {
                 neighbors[actualPosition] = actualEdge;
                 actualPosition++;
             }
