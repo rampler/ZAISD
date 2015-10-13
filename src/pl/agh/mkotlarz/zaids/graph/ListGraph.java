@@ -63,6 +63,18 @@ public class ListGraph implements Graph {
 
     @Override
     public void deleteNode(GraphNode graphNode) throws NodeNotFoundException {
+        //Deleting edges connected to node
+        for(int i=0; i< actualSize; i++) {
+            ListGraphEdge actualEdge = nodes[i].getFirstEdge();
+            while(actualEdge != null) {
+                if(actualEdge.getSecondNode().equals(graphNode)) {
+                    try { deleteEdge(actualEdge); }
+                    catch (EdgeNotFoundException e) { e.printStackTrace(); }
+                }
+                actualEdge = actualEdge.getNextEdge();
+            }
+        }
+
         int nodeIndex = findNodeArrayIndex(graphNode);
         for(int i=nodeIndex; i<actualSize; i++)
             nodes[i] = nodes[i+1];
@@ -108,6 +120,7 @@ public class ListGraph implements Graph {
         if(actualEdge == null) throw new EdgeNotFoundException(graphEdge);
         else {
             if(actualEdge.getPrevEdge() != null) actualEdge.getPrevEdge().setNextEdge(actualEdge.getNextEdge());
+            else nodes[primaryNodeIndex].setFirstEdge(actualEdge.getNextEdge());
             if(actualEdge.getNextEdge() != null) actualEdge.getNextEdge().setPrevEdge(actualEdge.getPrevEdge());
         }
     }
@@ -188,7 +201,7 @@ public class ListGraph implements Graph {
         try {
             int firstNodeIndex = findNodeArrayIndex(graphNode1);
             ListGraphEdge actualEdge = nodes[firstNodeIndex].getFirstEdge();
-            while (actualEdge != null && actualEdge.getSecondNode() != graphNode2) {
+            while (actualEdge != null && !actualEdge.getSecondNode().equals(graphNode2)) {
                 actualEdge = actualEdge.getNextEdge();
             }
             return (actualEdge != null);

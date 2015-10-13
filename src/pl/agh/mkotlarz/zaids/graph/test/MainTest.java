@@ -34,6 +34,12 @@ public class MainTest {
         GraphImporter.importGraphFromFile(graph, "graf.txt");
         System.out.println("Graph loaded!!! Time: "+(System.currentTimeMillis() - startTime)+" ms.");
 
+        //Nodes count
+        int nodesCount1 = graph.getNodesCount();
+
+        //Edges count
+        int edgesCount1 = graph.getEdgesCount();
+
         //Deleting node
         graph.deleteNode(new GraphNode(1));
 
@@ -47,10 +53,10 @@ public class MainTest {
         GraphEdge[] incidental = graph.getIncidentalEdges();
 
         //Nodes count
-        int nodesCount = graph.getNodesCount();
+        int nodesCount2 = graph.getNodesCount();
 
         //Edges count
-        int edgesCount = graph.getEdgesCount();
+        int edgesCount2 = graph.getEdgesCount();
 
         //Is neighbor
         boolean test1 = graph.isNodesNeighbors(new GraphNode(1), new GraphNode(31));

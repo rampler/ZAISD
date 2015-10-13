@@ -114,7 +114,7 @@ public class MatrixGraph implements Graph {
     public void deleteEdge(GraphEdge graphEdge) throws NodeNotFoundException {
         int firstNodeMatrixIndex = findNodeMatrixIndex(graphEdge.getFirstNode());
         int secondNodeMatrixIndex = findNodeMatrixIndex(graphEdge.getSecondNode());
-        matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] = graphEdge;
+        matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] = null;
     }
 
     @Override
