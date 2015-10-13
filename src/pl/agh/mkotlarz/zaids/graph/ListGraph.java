@@ -52,7 +52,7 @@ public class ListGraph implements Graph {
             findNodeArrayIndex(graphNode);
         }
         catch (NodeNotFoundException ex){   //If not exist - add node
-            if(nodes.length == actualSize)
+            if(nodes.length-1 == actualSize)
                 makeNodesArrayBigger(DEFAULT_STEP_SIZE);
 
             nodes[actualSize] = listGraphNode;
@@ -149,13 +149,13 @@ public class ListGraph implements Graph {
     }
 
     @Override
-    public GraphEdge[] getIncidentalEdges() throws NodeNotFoundException {
+    public GraphEdge[] getIncidentalEdges(GraphNode graphNode) throws NodeNotFoundException {
         int edgesCount = 0;
 
         for(int i=0; i<actualSize; i++){
             ListGraphEdge actualEdge = nodes[i].getFirstEdge();
             while (actualEdge != null) {
-                if (actualEdge.getFirstNode().equals(actualEdge.getSecondNode()))
+                if (actualEdge.getFirstNode().equals(graphNode) || actualEdge.getSecondNode().equals(graphNode))
                     edgesCount++;
                 actualEdge = actualEdge.getNextEdge();
             }
@@ -166,8 +166,8 @@ public class ListGraph implements Graph {
         for(int i=0; i<actualSize; i++){
             int actualPosition = 0;
             ListGraphEdge actualEdge = nodes[i].getFirstEdge();
-            while (actualPosition < edgesCount) {
-                if (actualEdge.getFirstNode().equals(actualEdge.getSecondNode())) {
+            while (actualEdge != null) {
+                if (actualEdge.getFirstNode().equals(graphNode) || actualEdge.getSecondNode().equals(graphNode)){
                     neighbors[actualPosition] = actualEdge;
                     actualPosition++;
                 }

@@ -1,6 +1,5 @@
 package pl.agh.mkotlarz.zaids.graph.test;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import pl.agh.mkotlarz.zaids.graph.*;
 import pl.agh.mkotlarz.zaids.graph.exceptions.EdgeNotFoundException;
 import pl.agh.mkotlarz.zaids.graph.exceptions.NodeNotFoundException;
@@ -31,7 +30,7 @@ public class MainTest {
         long startTime = System.currentTimeMillis();
 
         //Loading graph
-        GraphImporter.importGraphFromFile(graph, "graf.txt");
+        GraphImporter.importGraphFromFile(graph, "duzy_graf.txt");
         System.out.println("Graph loaded!!! Time: "+(System.currentTimeMillis() - startTime)+" ms.");
 
         //Nodes count
@@ -44,13 +43,14 @@ public class MainTest {
         graph.deleteNode(new GraphNode(1));
 
         //Delete edge
-        graph.deleteEdge(new GraphEdge(new GraphNode(15), new GraphNode(5), 54));
+//        graph.deleteEdge(new GraphEdge(new GraphNode(15), new GraphNode(5), 54));
+        graph.deleteEdge(new GraphEdge(new GraphNode(762), new GraphNode(606), 199));
 
         //Get neighbors
         GraphNode[] neighbors = graph.getNeighborNodes(new GraphNode(19));
 
         //Get incidental
-        GraphEdge[] incidental = graph.getIncidentalEdges();
+        GraphEdge[] incidental = graph.getIncidentalEdges(new GraphNode(19));
 
         //Nodes count
         int nodesCount2 = graph.getNodesCount();

@@ -1,5 +1,6 @@
 package pl.agh.mkotlarz.zaids.graph;
 
+import pl.agh.mkotlarz.zaids.graph.exceptions.EdgeNotFoundException;
 import pl.agh.mkotlarz.zaids.graph.exceptions.NodeNotFoundException;
 
 /**
@@ -106,15 +107,17 @@ public class MatrixGraph implements Graph {
             secondNodeMatrixIndex = actualSize;
         }
         finally {
-            matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] = graphEdge;
+            if(matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] == null || ((GraphEdge)matrix[firstNodeMatrixIndex][secondNodeMatrixIndex]).getWeight() > graphEdge.getWeight())
+                matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] = graphEdge; // If lower weight then replace current edge.
         }
     }
 
     @Override
-    public void deleteEdge(GraphEdge graphEdge) throws NodeNotFoundException {
+    public void deleteEdge(GraphEdge graphEdge) throws NodeNotFoundException, EdgeNotFoundException {
         int firstNodeMatrixIndex = findNodeMatrixIndex(graphEdge.getFirstNode());
         int secondNodeMatrixIndex = findNodeMatrixIndex(graphEdge.getSecondNode());
-        matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] = null;
+        if(matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] == null) throw new EdgeNotFoundException(graphEdge);
+        else matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] = null;
     }
 
     @Override
@@ -135,18 +138,20 @@ public class MatrixGraph implements Graph {
     }
 
     @Override
-    public GraphEdge[] getIncidentalEdges() {
+    public GraphEdge[] getIncidentalEdges(GraphNode graphNode) {
         int incidentalCount = 0;
-        for(int i=1; i<matrix.length; i++)
-            if(matrix[i][i] != null && ((GraphEdge)matrix[i][i]).getFirstNode().equals(((GraphEdge)matrix[i][i]).getSecondNode()))
-                incidentalCount++;
+        for(int i=1; i<actualSize; i++)
+            for(int j=1; j<actualSize; j++)
+                if(matrix[i][j] != null && (((GraphEdge)matrix[i][j]).getFirstNode().equals(graphNode) || ((GraphEdge)matrix[i][j]).getSecondNode().equals(graphNode)))
+                    incidentalCount++;
 
         GraphEdge[] incidentalList = new GraphEdge[incidentalCount];
         int actualElementIndex = 0;
-        for(int i=1; i<matrix.length; i++)
-            if(matrix[i][i] != null && ((GraphEdge)matrix[i][i]).getFirstNode().equals(((GraphEdge)matrix[i][i]).getSecondNode())) {
-                incidentalList[actualElementIndex] = (GraphEdge)matrix[i][i];
-                actualElementIndex++;
+        for(int i=1; i<actualSize; i++)
+            for(int j=1; j<actualSize; j++)
+                if(matrix[i][j] != null && (((GraphEdge)matrix[i][j]).getFirstNode().equals(graphNode) || ((GraphEdge)matrix[i][j]).getSecondNode().equals(graphNode))) {
+                    incidentalList[actualElementIndex] = (GraphEdge)matrix[i][j];
+                    actualElementIndex++;
             }
 
         return incidentalList;
