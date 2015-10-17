@@ -138,11 +138,13 @@ public class MatrixGraph implements Graph {
     }
 
     @Override
-    public GraphEdge[] getIncidentalEdges(GraphNode graphNode) {
+    public GraphEdge[] getIncidentalEdges(GraphNode graphNode) throws NodeNotFoundException {
         int incidentalCount = 0;
+//        int index = findNodeMatrixIndex(graphNode);
         for(int i=1; i<actualSize; i++)
             for(int j=1; j<actualSize; j++)
                 if(matrix[i][j] != null && (((GraphEdge)matrix[i][j]).getFirstNode().equals(graphNode) || ((GraphEdge)matrix[i][j]).getSecondNode().equals(graphNode)))
+//                if(matrix[index][i] != null && (((GraphEdge)matrix[index][i]).getFirstNode().equals(graphNode) ))
                     incidentalCount++;
 
         GraphEdge[] incidentalList = new GraphEdge[incidentalCount];
@@ -150,7 +152,9 @@ public class MatrixGraph implements Graph {
         for(int i=1; i<actualSize; i++)
             for(int j=1; j<actualSize; j++)
                 if(matrix[i][j] != null && (((GraphEdge)matrix[i][j]).getFirstNode().equals(graphNode) || ((GraphEdge)matrix[i][j]).getSecondNode().equals(graphNode))) {
+//                if(matrix[index][i] != null && (((GraphEdge)matrix[index][i]).getFirstNode().equals(graphNode) )) {
                     incidentalList[actualElementIndex] = (GraphEdge)matrix[i][j];
+//                    incidentalList[actualElementIndex] = (GraphEdge)matrix[index][i];
                     actualElementIndex++;
             }
 

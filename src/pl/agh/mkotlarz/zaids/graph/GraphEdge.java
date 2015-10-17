@@ -30,4 +30,12 @@ public class GraphEdge {
     public String toString() {
         return "(" + firstNode + "," + secondNode + "," + weight + ')';
     }
+
+    @Override
+    public int hashCode() {
+        int result = firstNode != null ? firstNode.getNodeId() : 0;
+        result = 31 * result + (secondNode != null ? secondNode.getNodeId() : 0);
+//        result = 31 * result + weight;
+        return result;
+    }
 }
