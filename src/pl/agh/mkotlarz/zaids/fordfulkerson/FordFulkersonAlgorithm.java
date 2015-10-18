@@ -15,7 +15,7 @@ public class FordFulkersonAlgorithm {
 
     private static Graph graph;
     private static HashMap<GraphEdge, Integer> flows;
-    private static HashMap<GraphEdge, GraphEdge> visitedEdges; //Visited, Previous
+    private static HashMap<GraphNode, Pair<GraphNode, Integer>> visitedNodes; //Visited, Previous
 
     public static int getMaxFlow(Graph graph, GraphNode source, GraphNode sink) throws NodeNotFoundException {
         long startTime = System.currentTimeMillis();
@@ -23,7 +23,9 @@ public class FordFulkersonAlgorithm {
         FordFulkersonAlgorithm.graph = graph;
         flows = new HashMap<>();
         LinkedList<GraphEdge> path = findPath(source, sink, new LinkedList<GraphEdge>());
-        System.out.println(path);
+//        System.out.println((path != null)?path.getFirst():null);
+//        System.out.println(path);
+
         while (path != null && !path.isEmpty()) {
             int minCf = (path.getFirst().getWeight() - ((flows.containsKey(path.getFirst())) ? flows.get(path.getFirst()) : 0));
             for (GraphEdge edge : path) {
@@ -37,7 +39,8 @@ public class FordFulkersonAlgorithm {
                 flows.put(reverseEdge, (((flows.containsKey(reverseEdge)) ? flows.get(reverseEdge) : 0) - minCf)); //TODO uncomment
             }
             path = findPath(source, sink, new LinkedList<GraphEdge>());
-            System.out.println(path);
+//            System.out.println((path != null)?path.getFirst():null);
+//            System.out.println(path);
         }
 
 //        System.out.println(flows);
@@ -51,79 +54,43 @@ public class FordFulkersonAlgorithm {
     }
 
     private static LinkedList<GraphEdge> findPath(GraphNode startNode, GraphNode endNode, LinkedList<GraphEdge> path) throws NodeNotFoundException {
-        if (path.isEmpty())
-            visitedEdges = new HashMap<>();
+        long startTime = System.currentTimeMillis();
+        visitedNodes = new HashMap<>();
+        visitedNodes.put(startNode, null);
 
-        Stack<Pair<GraphEdge, GraphEdge>> stack = new Stack<>();
-        for (GraphEdge edge : graph.getIncidentalEdges(startNode)) {
-                int cf = edge.getWeight() - (flows.get(edge) != null ? flows.get(edge) : 0);
-                if (cf > 0) {
-                    if (edge.getSecondNode().equals(endNode)) {
+        Stack<Pair<GraphNode, Pair<GraphNode, Integer>>> stack = new Stack<>();
+        Pair<GraphNode, Pair<GraphNode, Integer>> head;
+        for (GraphEdge edge : graph.getIncidentalEdges(startNode))
+            stack.push(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
+
+        do {
+            head = stack.pop();
+            int cf = head.getValue().getValue() - (flows.get(new GraphEdge(head.getValue().getKey(),head.getKey(),head.getValue().getValue())) != null ? flows.get(new GraphEdge(head.getValue().getKey(),head.getKey(),head.getValue().getValue())) : 0);
+            if (cf > 0) {
+                if (!visitedNodes.containsKey(head.getKey())) {
+                    visitedNodes.put(head.getKey(), head.getValue());
+                    if (head.getKey().equals(endNode)) {
+                        GraphNode node = endNode;
                         LinkedList<GraphEdge> newPath = new LinkedList<>();
-                        GraphEdge prevEdge = edge;
-                        newPath.add(edge);
-                        while (visitedEdges.get(prevEdge) != null && !prevEdge.getFirstNode().equals(startNode)) {
-                            newPath.addFirst(prevEdge);
-                            prevEdge = visitedEdges.get(visitedEdges.get(prevEdge));
+                        while (visitedNodes.get(node) != null) {
+                            newPath.addFirst(new GraphEdge(visitedNodes.get(node).getKey(), node, visitedNodes.get(node).getValue()));
+                            node = visitedNodes.get(node).getKey();
                         }
-                        if(!prevEdge.equals(newPath.getFirst()))
-                            newPath.addFirst(prevEdge);
+                        System.out.println((System.currentTimeMillis()-startTime));
                         return newPath;
                     } else {
-                        stack.push(new Pair<>(edge, edge));
-                        visitedEdges.put(edge, edge);
-                    }
-                }
-        }
-//            stack.push(new Pair<GraphEdge, GraphEdge>(edge, null));
+                        for (GraphEdge edge : graph.getIncidentalEdges(head.getKey())) {
 
-        while (!stack.empty()) {
-            Pair<GraphEdge, GraphEdge> head = stack.pop();
-            for (GraphEdge edge : graph.getIncidentalEdges(head.getKey().getSecondNode())) {
-                if (!visitedEdges.containsKey(edge)) {
-
-                    int cf = edge.getWeight() - (flows.get(edge) != null ? flows.get(edge) : 0);
-                    if (cf > 0) {
-                        if (edge.getSecondNode().equals(endNode)) {
-                            LinkedList<GraphEdge> newPath = new LinkedList<>();
-                            GraphEdge prevEdge = head.getKey();
-                            newPath.add(edge);
-                            while (prevEdge != null && !prevEdge.getFirstNode().equals(startNode)) {
-                                newPath.addFirst(prevEdge);
-                                prevEdge = visitedEdges.get(prevEdge);
+                            cf = edge.getWeight() - (flows.get(edge) != null ? flows.get(edge) : 0);
+                            if (cf > 0) {
+                                stack.push(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
                             }
-                            if(prevEdge != null)
-                                newPath.addFirst(prevEdge);
-                            return newPath;
-                        } else {
-                            if(!edge.equals(head.getKey()))
-                                stack.push(new Pair<>(edge, head.getKey()));
-                            visitedEdges.put(edge, head.getKey());
                         }
                     }
-
                 }
             }
 
-        }
+        } while (!stack.empty());
         return null;
-
-////        LinkedList<GraphEdge> newPath = new LinkedList<>(path);
-//        if (startNode.equals(endNode))
-//            return path;
-//        else {
-//            for (GraphEdge edge : graph.getIncidentalEdges(startNode)) {
-//                    int cf = edge.getWeight() - (flows.get(edge) != null ? flows.get(edge): 0);
-////                    visitedNodes.put(edge.getSecondNode());
-//                    if(cf > 0 && !path.contains(edge)) { //avoid cycle
-//                        path.add(edge);
-//
-//                        LinkedList<GraphEdge> cycPath = findPath(edge.getSecondNode(), endNode, path);
-//                        if(cycPath != null)
-//                            return cycPath;
-//                    }
-//            }
-//            return null;
-//        }
     }
 }

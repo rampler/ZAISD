@@ -23,4 +23,9 @@ public class GraphNode {
     public boolean equals(Object obj) {
         return (obj instanceof GraphNode && ((GraphNode)obj).getNodeId() == nodeId);
     }
+
+    @Override
+    public int hashCode() {
+        return nodeId;
+    }
 }

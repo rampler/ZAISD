@@ -32,6 +32,19 @@ public class GraphEdge {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GraphEdge edge = (GraphEdge) o;
+
+        if (weight != edge.weight) return false;
+        if (firstNode != null ? !firstNode.equals(edge.firstNode) : edge.firstNode != null) return false;
+        return !(secondNode != null ? !secondNode.equals(edge.secondNode) : edge.secondNode != null);
+
+    }
+
+    @Override
     public int hashCode() {
         int result = firstNode != null ? firstNode.getNodeId() : 0;
         result = 31 * result + (secondNode != null ? secondNode.getNodeId() : 0);

@@ -141,8 +141,8 @@ public class MatrixGraph implements Graph {
         for (int i = 1; i < actualSize + 1; i++) {
             if (matrix[index][i] != null && (((GraphEdge) matrix[index][i]).getFirstNode().equals(graphNode)))
                 incidentalCount++;
-            if (matrix[i][index] != null && (((GraphEdge) matrix[i][index]).getSecondNode().equals(graphNode)))
-                incidentalCount++;
+//            if (matrix[i][index] != null && (((GraphEdge) matrix[i][index]).getSecondNode().equals(graphNode)))
+//                incidentalCount++;
         }
 
         GraphEdge[] incidentalList = new GraphEdge[incidentalCount];
@@ -152,10 +152,10 @@ public class MatrixGraph implements Graph {
                 incidentalList[actualElementIndex] = (GraphEdge) matrix[index][i];
                 actualElementIndex++;
             }
-            if (matrix[i][index] != null && (((GraphEdge) matrix[i][index]).getSecondNode().equals(graphNode))) {
-                incidentalList[actualElementIndex] = (GraphEdge) matrix[i][index];
-                actualElementIndex++;
-            }
+//            if (matrix[i][index] != null && (((GraphEdge) matrix[i][index]).getSecondNode().equals(graphNode))) {
+//                incidentalList[actualElementIndex] = (GraphEdge) matrix[i][index];
+//                actualElementIndex++;
+//            }
         }
 
         return incidentalList;
