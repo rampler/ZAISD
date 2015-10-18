@@ -154,29 +154,29 @@ public class ListGraph implements Graph {
 
         int index = findNodeArrayIndex(graphNode);
 
-        for(int i=0; i<actualSize; i++){
-            ListGraphEdge actualEdge = nodes[i].getFirstEdge();
-//            ListGraphEdge actualEdge = nodes[index].getFirstEdge();
+//        for(int i=0; i<actualSize; i++){
+//            ListGraphEdge actualEdge = nodes[i].getFirstEdge();
+            ListGraphEdge actualEdge = nodes[index].getFirstEdge();
             while (actualEdge != null) {
-                if (actualEdge.getFirstNode().equals(graphNode) || actualEdge.getSecondNode().equals(graphNode))
+//                if (actualEdge.getFirstNode().equals(graphNode) || actualEdge.getSecondNode().equals(graphNode))
                     edgesCount++;
                 actualEdge = actualEdge.getNextEdge();
             }
-        }
+//        }
 
         GraphEdge[] neighbors = new GraphEdge[edgesCount];
         int actualPosition = 0;
-        for(int i=0; i<actualSize; i++){
-            ListGraphEdge actualEdge = nodes[i].getFirstEdge();
-//            actualEdge = nodes[index].getFirstEdge();
+//        for(int i=0; i<actualSize; i++){
+//            ListGraphEdge actualEdge = nodes[i].getFirstEdge();
+            actualEdge = nodes[index].getFirstEdge();
             while (actualEdge != null) {
-                if (actualEdge.getFirstNode().equals(graphNode) || actualEdge.getSecondNode().equals(graphNode)){
+//                if (actualEdge.getFirstNode().equals(graphNode) || actualEdge.getSecondNode().equals(graphNode)){
                     neighbors[actualPosition] = actualEdge;
                     actualPosition++;
-                }
+//                }
                 actualEdge = actualEdge.getNextEdge();
             }
-        }
+//        }
 
         return neighbors;
     }
