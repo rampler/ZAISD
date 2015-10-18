@@ -18,11 +18,11 @@ public class Program {
 //            GraphImporter.importGraphFromFile(graph, "duzy_graf.txt");
 //            GraphNode source = new GraphNode(109);
 //            GraphNode sink = new GraphNode(609);
-
+//
             GraphImporter.importGraphFromFile(graph, "graf.txt");
             GraphNode source = new GraphNode(13);
             GraphNode sink = new GraphNode(18);
-
+//
 //            GraphImporter.importGraphFromFile(graph, "test_graph.txt");
 //            GraphNode source = new GraphNode(1);
 //            GraphNode sink = new GraphNode(6);

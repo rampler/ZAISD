@@ -15,7 +15,7 @@ public class MatrixGraph implements Graph {
     private Object[][] matrix;
 
     /* Constructors */
-    public MatrixGraph(int initSize){
+    public MatrixGraph(int initSize) {
         matrix = new Object[initSize][initSize];
     }
 
@@ -25,20 +25,20 @@ public class MatrixGraph implements Graph {
 
     /* Private methods */
 
-    private void makeMatrixBigger(int step){
+    private void makeMatrixBigger(int step) {
         Object[][] newMatrix = new Object[matrix.length + step][matrix.length + step];
-        for(int i=0; i < matrix.length; i++)
-            for(int j=0; j< matrix[i].length; j++)
+        for (int i = 0; i < matrix.length; i++)
+            for (int j = 0; j < matrix[i].length; j++)
                 newMatrix[i][j] = matrix[i][j];
         matrix = newMatrix;
     }
 
     private int findNodeMatrixIndex(GraphNode graphNode) throws NodeNotFoundException {
         int nodeInMatrixIndex = 0;
-        while(nodeInMatrixIndex < matrix.length && !graphNode.equals(matrix[nodeInMatrixIndex][0]))
+        while (nodeInMatrixIndex < matrix.length && !graphNode.equals(matrix[nodeInMatrixIndex][0]))
             nodeInMatrixIndex++;
 
-        if(nodeInMatrixIndex == matrix.length)
+        if (nodeInMatrixIndex == matrix.length)
             throw new NodeNotFoundException(graphNode);
 
         return nodeInMatrixIndex;
@@ -47,8 +47,8 @@ public class MatrixGraph implements Graph {
     private int getNeighborsCount(GraphNode graphNode) throws NodeNotFoundException {
         int nodeMatrixIndex = findNodeMatrixIndex(graphNode);
         int neighborsCount = 0;
-        for(int i=1; i<=actualSize; i++)
-            if(matrix[nodeMatrixIndex][i] != null)
+        for (int i = 1; i <= actualSize; i++)
+            if (matrix[nodeMatrixIndex][i] != null)
                 neighborsCount++;
         return neighborsCount;
     }
@@ -56,15 +56,14 @@ public class MatrixGraph implements Graph {
     /* Implementation of interface Graph */
     @Override
     public void addNode(GraphNode graphNode) {
-        try{
+        try {
             findNodeMatrixIndex(graphNode);
-        }
-        catch (NodeNotFoundException ex){
-            if(matrix.length-1 == actualSize)
+        } catch (NodeNotFoundException ex) {
+            if (matrix.length - 1 == actualSize)
                 makeMatrixBigger(DEFAULT_STEP_SIZE);
 
-            matrix[actualSize+1][0] = graphNode;
-            matrix[0][actualSize+1] = graphNode;
+            matrix[actualSize + 1][0] = graphNode;
+            matrix[0][actualSize + 1] = graphNode;
 
             actualSize++;
         }
@@ -74,17 +73,17 @@ public class MatrixGraph implements Graph {
     public void deleteNode(GraphNode graphNode) throws NodeNotFoundException {
         int nodeInMatrixIndex = findNodeMatrixIndex(graphNode);
 
-        for(int i=nodeInMatrixIndex; i <= actualSize; i++)
-            for(int j=0; j <= actualSize; j++)
-                if(i != actualSize)
-                    matrix[i][j] = matrix[i+1][j];
+        for (int i = nodeInMatrixIndex; i <= actualSize; i++)
+            for (int j = 0; j <= actualSize; j++)
+                if (i != actualSize)
+                    matrix[i][j] = matrix[i + 1][j];
                 else
                     matrix[i][j] = null;
 
-        for(int i=0; i <= actualSize; i++)
-            for(int j = nodeInMatrixIndex; j <= actualSize; j++)
-                if(j != actualSize)
-                    matrix[i][j] = matrix[i][j+1];
+        for (int i = 0; i <= actualSize; i++)
+            for (int j = nodeInMatrixIndex; j <= actualSize; j++)
+                if (j != actualSize)
+                    matrix[i][j] = matrix[i][j + 1];
                 else
                     matrix[i][j] = null;
 
@@ -99,15 +98,13 @@ public class MatrixGraph implements Graph {
         try {
             firstNodeMatrixIndex = findNodeMatrixIndex(graphEdge.getFirstNode());
             secondNodeMatrixIndex = findNodeMatrixIndex(graphEdge.getSecondNode());
-        }
-        catch(NodeNotFoundException ex){
+        } catch (NodeNotFoundException ex) {
             addNode(graphEdge.getFirstNode());
             firstNodeMatrixIndex = actualSize;
             addNode(graphEdge.getSecondNode());
             secondNodeMatrixIndex = actualSize;
-        }
-        finally {
-            if(matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] == null || ((GraphEdge)matrix[firstNodeMatrixIndex][secondNodeMatrixIndex]).getWeight() > graphEdge.getWeight())
+        } finally {
+            if (matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] == null || ((GraphEdge) matrix[firstNodeMatrixIndex][secondNodeMatrixIndex]).getWeight() > graphEdge.getWeight())
                 matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] = graphEdge; // If lower weight then replace current edge.
         }
     }
@@ -116,7 +113,7 @@ public class MatrixGraph implements Graph {
     public void deleteEdge(GraphEdge graphEdge) throws NodeNotFoundException, EdgeNotFoundException {
         int firstNodeMatrixIndex = findNodeMatrixIndex(graphEdge.getFirstNode());
         int secondNodeMatrixIndex = findNodeMatrixIndex(graphEdge.getSecondNode());
-        if(matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] == null) throw new EdgeNotFoundException(graphEdge);
+        if (matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] == null) throw new EdgeNotFoundException(graphEdge);
         else matrix[firstNodeMatrixIndex][secondNodeMatrixIndex] = null;
     }
 
@@ -128,8 +125,8 @@ public class MatrixGraph implements Graph {
 
         int actualNeighborIndex = 0;
 
-        for(int i=1; i<=actualSize; i++)
-            if(matrix[nodeMatrixIndex][i] != null) {
+        for (int i = 1; i <= actualSize; i++)
+            if (matrix[nodeMatrixIndex][i] != null) {
                 neighbors[actualNeighborIndex] = ((GraphEdge) matrix[nodeMatrixIndex][i]).getSecondNode();
                 actualNeighborIndex++;
             }
@@ -140,23 +137,26 @@ public class MatrixGraph implements Graph {
     @Override
     public GraphEdge[] getIncidentalEdges(GraphNode graphNode) throws NodeNotFoundException {
         int incidentalCount = 0;
-//        int index = findNodeMatrixIndex(graphNode);
-        for(int i=1; i<actualSize+1; i++)
-            for(int j=1; j<actualSize+1; j++)
-                if(matrix[i][j] != null && (((GraphEdge)matrix[i][j]).getFirstNode().equals(graphNode) || ((GraphEdge)matrix[i][j]).getSecondNode().equals(graphNode)))
-//                if(matrix[index][i] != null && (((GraphEdge)matrix[index][i]).getFirstNode().equals(graphNode) ))
-                    incidentalCount++;
+        int index = findNodeMatrixIndex(graphNode);
+        for (int i = 1; i < actualSize + 1; i++) {
+            if (matrix[index][i] != null && (((GraphEdge) matrix[index][i]).getFirstNode().equals(graphNode)))
+                incidentalCount++;
+            if (matrix[i][index] != null && (((GraphEdge) matrix[i][index]).getSecondNode().equals(graphNode)))
+                incidentalCount++;
+        }
 
         GraphEdge[] incidentalList = new GraphEdge[incidentalCount];
         int actualElementIndex = 0;
-        for(int i=1; i<actualSize+1; i++)
-            for(int j=1; j<actualSize+1; j++)
-                if(matrix[i][j] != null && (((GraphEdge)matrix[i][j]).getFirstNode().equals(graphNode) || ((GraphEdge)matrix[i][j]).getSecondNode().equals(graphNode))) {
-//                if(matrix[index][i] != null && (((GraphEdge)matrix[index][i]).getFirstNode().equals(graphNode) )) {
-                    incidentalList[actualElementIndex] = (GraphEdge)matrix[i][j];
-//                    incidentalList[actualElementIndex] = (GraphEdge)matrix[index][i];
-                    actualElementIndex++;
+        for (int i = 1; i < actualSize + 1; i++) {
+            if (matrix[index][i] != null && (((GraphEdge) matrix[index][i]).getFirstNode().equals(graphNode))) {
+                incidentalList[actualElementIndex] = (GraphEdge) matrix[index][i];
+                actualElementIndex++;
             }
+            if (matrix[i][index] != null && (((GraphEdge) matrix[i][index]).getSecondNode().equals(graphNode))) {
+                incidentalList[actualElementIndex] = (GraphEdge) matrix[i][index];
+                actualElementIndex++;
+            }
+        }
 
         return incidentalList;
     }
@@ -169,9 +169,9 @@ public class MatrixGraph implements Graph {
     @Override
     public int getEdgesCount() {
         int size = 0;
-        for(int i=1; i <= actualSize; i++)
-            for(int j=1; j <= actualSize; j++)
-                if(matrix[i][j] != null)
+        for (int i = 1; i <= actualSize; i++)
+            for (int j = 1; j <= actualSize; j++)
+                if (matrix[i][j] != null)
                     size++;
         return size;
     }

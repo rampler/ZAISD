@@ -40,7 +40,7 @@ public class FordFulkersonAlgorithm {
             System.out.println(path);
         }
 
-        System.out.println(flows);
+//        System.out.println(flows);
         int flow = 0;
         for (GraphEdge edge : graph.getIncidentalEdges(source))
             if (edge.getFirstNode().equals(source))
@@ -88,9 +88,9 @@ public class FordFulkersonAlgorithm {
                             LinkedList<GraphEdge> newPath = new LinkedList<>();
                             GraphEdge prevEdge = head.getKey();
                             newPath.add(edge);
-                            while (visitedEdges.get(prevEdge) != null && !prevEdge.getFirstNode().equals(startNode)) {
+                            while (prevEdge != null && !prevEdge.getFirstNode().equals(startNode)) {
                                 newPath.addFirst(prevEdge);
-                                prevEdge = visitedEdges.get(visitedEdges.get(prevEdge));
+                                prevEdge = visitedEdges.get(prevEdge);
                             }
                             if(prevEdge != null)
                                 newPath.addFirst(prevEdge);
