@@ -16,7 +16,7 @@ public class GraphImporter {
     /* Private methods */
 
     private static void proceedNextLine(Graph graph, String line) {
-        line = line.replaceAll("\\s+","");
+        line = line.replaceAll("\\s+", "");
         String lines[] = line.split(";");
         GraphNode firstNode = new GraphNode(Integer.parseInt(lines[0]));
         GraphNode secondNode = new GraphNode(Integer.parseInt(lines[1]));
@@ -33,7 +33,7 @@ public class GraphImporter {
         System.out.println("To end creating graph put empty line.");
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
-        while(line != null && !line.replaceAll("\\s+","").equals("")) {
+        while (line != null && !line.replaceAll("\\s+", "").equals("")) {
             proceedNextLine(graph, line);
             line = scanner.nextLine();
         }
@@ -43,14 +43,14 @@ public class GraphImporter {
 
     public static Graph importGraphFromString(Graph graph, String graphString) {
         String lines[] = graphString.split("\\r?\\n");
-        for(String line : lines)
+        for (String line : lines)
             proceedNextLine(graph, line);
         return graph;
     }
 
     public static Graph importGraphFromFile(Graph graph, String path) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(path));
-        while(scanner.hasNextLine())
+        while (scanner.hasNextLine())
             proceedNextLine(graph, scanner.nextLine());
         scanner.close();
         return graph;

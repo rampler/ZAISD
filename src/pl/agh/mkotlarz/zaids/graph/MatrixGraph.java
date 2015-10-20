@@ -194,16 +194,16 @@ public class MatrixGraph implements Graph {
     @Override
     public LinkedList<GraphNode> getNodes() {
         LinkedList<GraphNode> newNodes = new LinkedList<>();
-        for (int i = 1; i < actualSize+1; i++)
-            newNodes.add(((GraphNode)matrix[0][i]));
+        for (int i = 1; i < actualSize + 1; i++)
+            newNodes.add(((GraphNode) matrix[0][i]));
         return newNodes;
     }
 
     @Override
     public LinkedList<GraphEdge> getEdges() throws NodeNotFoundException {
         LinkedList<GraphEdge> edges = new LinkedList<>();
-        for(GraphNode node : getNodes())
-            for(GraphEdge edge : getIncidentalEdges(node))
+        for (GraphNode node : getNodes())
+            for (GraphEdge edge : getIncidentalEdges(node))
                 edges.add(edge);
 
         return edges;

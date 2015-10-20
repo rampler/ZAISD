@@ -6,7 +6,9 @@ import pl.agh.mkotlarz.zaids.graph.GraphEdge;
 import pl.agh.mkotlarz.zaids.graph.GraphNode;
 import pl.agh.mkotlarz.zaids.graph.exceptions.NodeNotFoundException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Created by Mateusz on 17.10.2015.
@@ -58,14 +60,14 @@ public class FordFulkersonAlgorithm {
         visitedNodes = new HashMap<>();
         visitedNodes.put(startNode, null);
 
-        Stack<Pair<GraphNode, Pair<GraphNode, Integer>>> stack = new Stack<>();
+        Queue<Pair<GraphNode, Pair<GraphNode, Integer>>> stack = new LinkedList<>();
         Pair<GraphNode, Pair<GraphNode, Integer>> head;
         for (GraphEdge edge : graph.getIncidentalEdges(startNode))
-            stack.push(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
+            stack.add(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
 
         do {
-            head = stack.pop();
-            int cf = head.getValue().getValue() - (flows.get(new GraphEdge(head.getValue().getKey(),head.getKey(),head.getValue().getValue())) != null ? flows.get(new GraphEdge(head.getValue().getKey(),head.getKey(),head.getValue().getValue())) : 0);
+            head = stack.remove();
+            int cf = head.getValue().getValue() - (flows.get(new GraphEdge(head.getValue().getKey(), head.getKey(), head.getValue().getValue())) != null ? flows.get(new GraphEdge(head.getValue().getKey(), head.getKey(), head.getValue().getValue())) : 0);
             if (cf > 0) {
                 if (!visitedNodes.containsKey(head.getKey())) {
                     visitedNodes.put(head.getKey(), head.getValue());
@@ -83,14 +85,14 @@ public class FordFulkersonAlgorithm {
 
                             cf = edge.getWeight() - (flows.get(edge) != null ? flows.get(edge) : 0);
                             if (cf > 0) {
-                                stack.push(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
+                                stack.add(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
                             }
                         }
                     }
                 }
             }
 
-        } while (!stack.empty());
+        } while (!stack.isEmpty());
         return null;
     }
 }

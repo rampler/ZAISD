@@ -31,7 +31,7 @@ public class MainTest {
 
         //Loading graph
         GraphImporter.importGraphFromFile(graph, "duzy_graf.txt");
-        System.out.println("Graph loaded!!! Time: "+(System.currentTimeMillis() - startTime)+" ms.");
+        System.out.println("Graph loaded!!! Time: " + (System.currentTimeMillis() - startTime) + " ms.");
 
         //Nodes count
         int nodesCount1 = graph.getNodesCount();
@@ -62,7 +62,7 @@ public class MainTest {
         boolean test1 = graph.isNodesNeighbors(new GraphNode(1), new GraphNode(31));
         boolean test2 = graph.isNodesNeighbors(new GraphNode(5), new GraphNode(9));
 
-        System.out.println("Total Test Time: "+(System.currentTimeMillis() - startTime)+" ms.");
+        System.out.println("Total Test Time: " + (System.currentTimeMillis() - startTime) + " ms.");
         System.out.println("");
     }
 }

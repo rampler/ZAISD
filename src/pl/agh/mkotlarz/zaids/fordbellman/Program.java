@@ -34,11 +34,11 @@ public class Program {
             FordBellManAlgorithm fordBellManAlgorithm = new FordBellManAlgorithm();
             HashMap<GraphNode, Integer> weights = fordBellManAlgorithm.getShortestPath(graph.getNodes(), graph.getEdges(), source);
             HashMap<GraphNode, GraphNode> predecessors = fordBellManAlgorithm.getPredecessors();
-            System.out.println("Shortest Path  weight from 109 to 609: "+weights.get(sink));
+            System.out.println("Shortest Path  weight from 109 to 609: " + weights.get(sink));
 
             GraphNode predecessor = new GraphNode(609);
             LinkedList<GraphNode> path = new LinkedList<>();
-            while(predecessor != null) {
+            while (predecessor != null) {
                 path.addFirst(predecessor);
                 predecessor = predecessors.get(predecessor);
             }
@@ -54,7 +54,7 @@ public class Program {
 
     }
 
-    public static void main(String args[]){
+    public static void main(String args[]) {
         System.out.println("MATRIX");
         calculate(new MatrixGraph());
         System.out.println();

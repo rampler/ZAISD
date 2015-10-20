@@ -12,7 +12,10 @@ public class NodeNotFoundException extends Exception {
     }
 
     public NodeNotFoundException(String message) {
-        super("Node not found. "+message);
+        super("Node not found. " + message);
     }
-    public NodeNotFoundException(GraphNode graphNode){ super("Node "+graphNode.getNodeId()+" not found!"); }
+
+    public NodeNotFoundException(GraphNode graphNode) {
+        super("Node " + graphNode.getNodeId() + " not found!");
+    }
 }

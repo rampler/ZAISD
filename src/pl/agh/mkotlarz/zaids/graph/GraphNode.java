@@ -16,12 +16,12 @@ public class GraphNode {
 
     @Override
     public String toString() {
-        return nodeId+"";
+        return nodeId + "";
     }
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof GraphNode && ((GraphNode)obj).getNodeId() == nodeId);
+        return (obj instanceof GraphNode && ((GraphNode) obj).getNodeId() == nodeId);
     }
 
     @Override

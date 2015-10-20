@@ -12,7 +12,10 @@ public class EdgeNotFoundException extends Exception {
     }
 
     public EdgeNotFoundException(String message) {
-        super("Edge not found. "+message);
+        super("Edge not found. " + message);
     }
-    public EdgeNotFoundException(GraphEdge graphEdge){ super("Edge ("+graphEdge.getFirstNode()+","+graphEdge.getSecondNode()+","+graphEdge.getWeight()+") not found!"); }
+
+    public EdgeNotFoundException(GraphEdge graphEdge) {
+        super("Edge (" + graphEdge.getFirstNode() + "," + graphEdge.getSecondNode() + "," + graphEdge.getWeight() + ") not found!");
+    }
 }

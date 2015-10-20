@@ -16,17 +16,17 @@ public class FordBellManAlgorithm {
 
     public HashMap<GraphNode, Integer> getShortestPath(LinkedList<GraphNode> nodes, LinkedList<GraphEdge> edges, GraphNode source) throws Exception {
         long startTime = System.currentTimeMillis();
-        for(GraphNode node : nodes) {
-            if(node.equals(source))
+        for (GraphNode node : nodes) {
+            if (node.equals(source))
                 weights.put(node, 0);
             else
                 weights.put(node, Integer.MAX_VALUE);
             predecessors.put(node, null);
         }
 
-        for(int i = 1; i<nodes.size()-1; i++){
-            for(GraphEdge edge : edges) {
-                if(weights.get(edge.getFirstNode()) != Integer.MAX_VALUE) {
+        for (int i = 1; i < nodes.size() - 1; i++) {
+            for (GraphEdge edge : edges) {
+                if (weights.get(edge.getFirstNode()) != Integer.MAX_VALUE) {
                     if (weights.get(edge.getFirstNode()) + edge.getWeight() < weights.get(edge.getSecondNode())) {
                         weights.put(edge.getSecondNode(), (weights.get(edge.getFirstNode()) + edge.getWeight()));
                         predecessors.put(edge.getSecondNode(), edge.getFirstNode());
@@ -35,11 +35,11 @@ public class FordBellManAlgorithm {
             }
         }
 
-        for(GraphEdge edge : edges) {
-            if(weights.get(edge.getFirstNode())+edge.getWeight() < weights.get(edge.getSecondNode()))
+        for (GraphEdge edge : edges) {
+            if (weights.get(edge.getFirstNode()) + edge.getWeight() < weights.get(edge.getSecondNode()))
                 throw new Exception("Graph contains a negative-weight cycle");
         }
-        System.out.println("Calculation Time: "+(System.currentTimeMillis()-startTime)+" ms");
+        System.out.println("Calculation Time: " + (System.currentTimeMillis() - startTime) + " ms");
         return weights;
     }
 

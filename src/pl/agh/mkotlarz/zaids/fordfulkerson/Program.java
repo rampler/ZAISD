@@ -3,7 +3,6 @@ package pl.agh.mkotlarz.zaids.fordfulkerson;
 import pl.agh.mkotlarz.zaids.graph.Graph;
 import pl.agh.mkotlarz.zaids.graph.GraphNode;
 import pl.agh.mkotlarz.zaids.graph.ListGraph;
-import pl.agh.mkotlarz.zaids.graph.MatrixGraph;
 import pl.agh.mkotlarz.zaids.importer.GraphImporter;
 
 /**
