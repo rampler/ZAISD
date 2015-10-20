@@ -3,6 +3,8 @@ package pl.agh.mkotlarz.zaids.graph;
 import pl.agh.mkotlarz.zaids.graph.exceptions.EdgeNotFoundException;
 import pl.agh.mkotlarz.zaids.graph.exceptions.NodeNotFoundException;
 
+import java.util.LinkedList;
+
 /**
  * Created by Mateusz on 07.10.2015.
  */
@@ -212,5 +214,25 @@ public class ListGraph implements Graph {
         catch (NodeNotFoundException ex) {
             return false;
         }
+    }
+
+    @Override
+    public LinkedList<GraphNode> getNodes() {
+        LinkedList<GraphNode> newNodes = new LinkedList<>();
+        for(ListGraphNode node : nodes)
+            if (node != null && node.getGraphNode() != null)
+                newNodes.add(node.getGraphNode());
+
+        return newNodes;
+    }
+
+    @Override
+    public LinkedList<GraphEdge> getEdges() throws NodeNotFoundException {
+        LinkedList<GraphEdge> edges = new LinkedList<>();
+        for(GraphNode node : getNodes())
+            for(GraphEdge edge : getIncidentalEdges(node))
+                edges.add(edge);
+
+        return edges;
     }
 }

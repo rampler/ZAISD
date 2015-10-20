@@ -76,7 +76,7 @@ public class FordFulkersonAlgorithm {
                             newPath.addFirst(new GraphEdge(visitedNodes.get(node).getKey(), node, visitedNodes.get(node).getValue()));
                             node = visitedNodes.get(node).getKey();
                         }
-                        System.out.println((System.currentTimeMillis()-startTime));
+//                        System.out.println((System.currentTimeMillis()-startTime));
                         return newPath;
                     } else {
                         for (GraphEdge edge : graph.getIncidentalEdges(head.getKey())) {

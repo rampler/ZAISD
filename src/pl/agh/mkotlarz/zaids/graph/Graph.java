@@ -3,6 +3,8 @@ package pl.agh.mkotlarz.zaids.graph;
 import pl.agh.mkotlarz.zaids.graph.exceptions.EdgeNotFoundException;
 import pl.agh.mkotlarz.zaids.graph.exceptions.NodeNotFoundException;
 
+import java.util.LinkedList;
+
 /**
  * Created by Mateusz on 06.10.2015.
  */
@@ -18,4 +20,6 @@ public interface Graph {
     int getEdgesCount();
     boolean isNodesNeighbors(GraphNode graphNode1, GraphNode graphNode2) throws NodeNotFoundException;
 
+    LinkedList<GraphNode> getNodes();
+    LinkedList<GraphEdge> getEdges() throws NodeNotFoundException;
 }
