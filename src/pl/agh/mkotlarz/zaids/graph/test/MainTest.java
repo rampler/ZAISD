@@ -50,7 +50,7 @@ public class MainTest {
         GraphNode[] neighbors = graph.getNeighborNodes(new GraphNode(19));
 
         //Get incidental
-        GraphEdge[] incidental = graph.getIncidentalEdges(new GraphNode(19));
+        GraphEdge[] incidental = graph.getOutEdges(new GraphNode(19));
 
         //Nodes count
         int nodesCount2 = graph.getNodesCount();

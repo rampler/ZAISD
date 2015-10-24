@@ -10,10 +10,6 @@ import pl.agh.mkotlarz.zaids.importer.GraphImporter;
  */
 public class Program {
 
-    // List implementation:     result = 9351, time = 460286 ms, paths = 9017
-    // Matrix implementation:   result = 9351, time = 293834 ms, paths = 8382
-    // ListTime/MatrixTime = 1,56648311
-
     public static void main(String args[]) {
         try {
             System.out.println("Loading graph...");

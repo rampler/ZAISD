@@ -20,6 +20,10 @@ public interface Graph {
 
     GraphNode[] getNeighborNodes(GraphNode graphNode) throws NodeNotFoundException;
 
+    GraphEdge[] getOutEdges(GraphNode graphNode) throws NodeNotFoundException;
+
+    GraphEdge[] getInEdges(GraphNode graphNode) throws NodeNotFoundException;
+
     GraphEdge[] getIncidentalEdges(GraphNode graphNode) throws NodeNotFoundException;
 
     int getNodesCount();

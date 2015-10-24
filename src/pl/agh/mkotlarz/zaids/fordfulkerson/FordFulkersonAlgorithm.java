@@ -17,7 +17,6 @@ public class FordFulkersonAlgorithm {
 
     private static Graph graph;
     private static HashMap<GraphEdge, Integer> flows;
-    private static HashMap<GraphNode, Pair<GraphNode, Integer>> visitedNodes; //Visited, Previous
 
     public static int getMaxFlow(Graph graph, GraphNode source, GraphNode sink) throws NodeNotFoundException {
         long startTime = System.currentTimeMillis();
@@ -25,8 +24,6 @@ public class FordFulkersonAlgorithm {
         FordFulkersonAlgorithm.graph = graph;
         flows = new HashMap<>();
         LinkedList<GraphEdge> path = findPath(source, sink, new LinkedList<GraphEdge>());
-//        System.out.println((path != null)?path.getFirst():null);
-//        System.out.println(path);
 
         while (path != null && !path.isEmpty()) {
             int minCf = (path.getFirst().getWeight() - ((flows.containsKey(path.getFirst())) ? flows.get(path.getFirst()) : 0));
@@ -41,13 +38,10 @@ public class FordFulkersonAlgorithm {
                 flows.put(reverseEdge, (((flows.containsKey(reverseEdge)) ? flows.get(reverseEdge) : 0) - minCf)); //TODO uncomment
             }
             path = findPath(source, sink, new LinkedList<GraphEdge>());
-//            System.out.println((path != null)?path.getFirst():null);
-//            System.out.println(path);
         }
 
-//        System.out.println(flows);
         int flow = 0;
-        for (GraphEdge edge : graph.getIncidentalEdges(source))
+        for (GraphEdge edge : graph.getOutEdges(source))
             if (edge.getFirstNode().equals(source))
                 flow += ((flows.containsKey(edge)) ? flows.get(edge) : 0);
 
@@ -56,13 +50,12 @@ public class FordFulkersonAlgorithm {
     }
 
     private static LinkedList<GraphEdge> findPath(GraphNode startNode, GraphNode endNode, LinkedList<GraphEdge> path) throws NodeNotFoundException {
-        long startTime = System.currentTimeMillis();
-        visitedNodes = new HashMap<>();
+        HashMap<GraphNode, Pair<GraphNode, Integer>> visitedNodes = new HashMap<>();
         visitedNodes.put(startNode, null);
 
         Queue<Pair<GraphNode, Pair<GraphNode, Integer>>> stack = new LinkedList<>();
         Pair<GraphNode, Pair<GraphNode, Integer>> head;
-        for (GraphEdge edge : graph.getIncidentalEdges(startNode))
+        for (GraphEdge edge : graph.getOutEdges(startNode))
             stack.add(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
 
         do {
@@ -78,10 +71,9 @@ public class FordFulkersonAlgorithm {
                             newPath.addFirst(new GraphEdge(visitedNodes.get(node).getKey(), node, visitedNodes.get(node).getValue()));
                             node = visitedNodes.get(node).getKey();
                         }
-//                        System.out.println((System.currentTimeMillis()-startTime));
                         return newPath;
                     } else {
-                        for (GraphEdge edge : graph.getIncidentalEdges(head.getKey())) {
+                        for (GraphEdge edge : graph.getOutEdges(head.getKey())) {
 
                             cf = edge.getWeight() - (flows.get(edge) != null ? flows.get(edge) : 0);
                             if (cf > 0) {

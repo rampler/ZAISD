@@ -6,7 +6,6 @@ import pl.agh.mkotlarz.zaids.graph.ListGraph;
 import pl.agh.mkotlarz.zaids.graph.MatrixGraph;
 import pl.agh.mkotlarz.zaids.importer.GraphImporter;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -17,11 +16,9 @@ public class Program {
     public static void calculate(Graph graph) {
         try {
             System.out.println("Loading graph...");
-//            Graph graph = new MatrixGraph();
             GraphImporter.importGraphFromFile(graph, "duzy_graf.txt");
             GraphNode source = new GraphNode(109);
             GraphNode sink = new GraphNode(609);
-
 //
 //            GraphImporter.importGraphFromFile(graph, "graf.txt");
 //            GraphNode source = new GraphNode(13);
@@ -30,6 +27,7 @@ public class Program {
 //            GraphImporter.importGraphFromFile(graph, "test_graph.txt");
 //            GraphNode source = new GraphNode(1);
 //            GraphNode sink = new GraphNode(6);
+
             System.out.println("Calculating Shortest Path");
             FordBellManAlgorithm fordBellManAlgorithm = new FordBellManAlgorithm();
             HashMap<GraphNode, Integer> weights = fordBellManAlgorithm.getShortestPath(graph.getNodes(), graph.getEdges(), source);
@@ -45,9 +43,6 @@ public class Program {
 
             System.out.println(path);
 
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
