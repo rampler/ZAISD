@@ -53,13 +53,13 @@ public class FordFulkersonAlgorithm {
         HashMap<GraphNode, Pair<GraphNode, Integer>> visitedNodes = new HashMap<>();
         visitedNodes.put(startNode, null);
 
-        Queue<Pair<GraphNode, Pair<GraphNode, Integer>>> stack = new LinkedList<>();
+        Queue<Pair<GraphNode, Pair<GraphNode, Integer>>> queue = new LinkedList<>();
         Pair<GraphNode, Pair<GraphNode, Integer>> head;
         for (GraphEdge edge : graph.getOutEdges(startNode))
-            stack.add(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
+            queue.add(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
 
         do {
-            head = stack.remove();
+            head = queue.remove();
             int cf = head.getValue().getValue() - (flows.get(new GraphEdge(head.getValue().getKey(), head.getKey(), head.getValue().getValue())) != null ? flows.get(new GraphEdge(head.getValue().getKey(), head.getKey(), head.getValue().getValue())) : 0);
             if (cf > 0) {
                 if (!visitedNodes.containsKey(head.getKey())) {
@@ -77,14 +77,14 @@ public class FordFulkersonAlgorithm {
 
                             cf = edge.getWeight() - (flows.get(edge) != null ? flows.get(edge) : 0);
                             if (cf > 0) {
-                                stack.add(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
+                                queue.add(new Pair<>(edge.getSecondNode(), new Pair<>(edge.getFirstNode(), edge.getWeight())));
                             }
                         }
                     }
                 }
             }
 
-        } while (!stack.isEmpty());
+        } while (!queue.isEmpty());
         return null;
     }
 }
