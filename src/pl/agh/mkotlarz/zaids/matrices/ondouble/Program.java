@@ -1,6 +1,12 @@
 package pl.agh.mkotlarz.zaids.matrices.ondouble;
 
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by Mateusz on 03.11.2015.
@@ -9,18 +15,10 @@ public class Program {
 
     private static LinkedList<Matrix> matrices = new LinkedList<>();
 
-    public static Matrix multiplyWOthreads() {
-        Matrix result = matrices.getFirst();
-        for (int i = 1; i < matrices.size(); i++) {
-            result = MatrixUtilities.multiplyMatrices(result, matrices.get(i));
-        }
-        return result;
-    }
-
     /**
      * One thread for one pair of matrices
      */
-    public static Matrix multiplyWithThreads1() throws InterruptedException {
+    public static Matrix multiplyWithThreads() throws InterruptedException {
         LinkedList<Matrix> matrices = new LinkedList<>(Program.matrices);
 
         while(matrices.size() != 1) {
@@ -51,6 +49,31 @@ public class Program {
     }
 
     /**
+     * Like on Pi package - getting active processes and counting by them.
+     */
+    private static Matrix multiplyWithAvailableProcesses() throws ExecutionException, InterruptedException {
+        int availableProcessors = Runtime.getRuntime().availableProcessors();
+        System.out.println("Processors count: "+availableProcessors);
+        ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        Future<Matrix>[] resultsSet = new Future[availableProcessors];
+
+        for (int i = 0; i < availableProcessors; i++) {
+            int startPosition = (matrices.size() / availableProcessors) * i;
+            int endPosition = (matrices.size() / availableProcessors) * (i + 1) - 1;
+            resultsSet[i] = (pool.submit(new MatrixMultiplierCallable(matrices.toArray(new Matrix[matrices.size()]), startPosition, endPosition)));
+        }
+
+        Matrix[] matrices = new Matrix[availableProcessors];
+        int i=0;
+        for(Future<Matrix> elem : resultsSet)
+            matrices[i++] = elem.get();
+
+        pool.shutdown();
+        return MatrixUtilities.multiplyArrayOfMatrices(matrices);
+    }
+
+
+    /**
      * Only for tests - to delete in future
      */
     private static void keepOnlyXMatrixes(int x){
@@ -67,18 +90,25 @@ public class Program {
             System.out.println("Loading matrices from file...");
             matrices = MatrixImporter.importFromFile("sample-matrices.txt");
             keepOnlyXMatrixes(200);
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 
             startTime = System.currentTimeMillis();
             System.out.println("Multiplying without threads...");
-            multiplyWOthreads();
-//            System.out.println(multiplyWOthreads());
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()]));
+//            System.out.println(MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()])));
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 
             startTime = System.currentTimeMillis();
             System.out.println("Multiplying using threads (thread by pair)...");
-            multiplyWithThreads1();
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            multiplyWithThreads();
+//            System.out.println(multiplyWithThreads());
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+
+            startTime = System.currentTimeMillis();
+            System.out.println("Multiplying using available processes...");
+            multiplyWithAvailableProcesses();
+//            System.out.println(multiplyWithAvailableProcesses());
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 
             System.out.println();
             System.out.println();
