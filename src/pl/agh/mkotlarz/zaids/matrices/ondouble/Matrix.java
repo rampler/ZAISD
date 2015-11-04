@@ -1,6 +1,4 @@
-package pl.agh.mkotlarz.zaids.matrixes;
-
-import java.util.Arrays;
+package pl.agh.mkotlarz.zaids.matrices.ondouble;
 
 /**
  * Created by Mateusz on 03.11.2015.
@@ -31,9 +29,9 @@ public class Matrix {
     @Override
     public String toString() {
         String result = "";
-        for (int i = 0; i < getMatrix().length; i++) {
-            for (int j = 0; j < getMatrix()[0].length; j++) {
-                result += getMatrix()[i][j]+" ";
+        for (int i = 0; i < getMatrix()[0].length; i++) {
+            for (int j = 0; j < getMatrix().length; j++) {
+                result += getMatrix()[j][i]+" ";
             }
             result += "\n";
         }

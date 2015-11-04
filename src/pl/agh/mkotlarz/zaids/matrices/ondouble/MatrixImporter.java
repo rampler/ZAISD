@@ -1,4 +1,4 @@
-package pl.agh.mkotlarz.zaids.matrixes;
+package pl.agh.mkotlarz.zaids.matrices.ondouble;
 
 import java.io.File;
 import java.io.FileNotFoundException;
