@@ -70,6 +70,7 @@ public class MatrixUtilities {
             multiplyMatricesInSplittersOrders(matrices, splitters, splitters[i][j] + 1, j);
 //            System.out.println(" A_" + i + istr + "* A_" + j + jstr);
             matrices[i] = multiplyMatrices(matrices[i], matrices[j]);
+            matrices[j] = matrices[i];
         }
     }
 }

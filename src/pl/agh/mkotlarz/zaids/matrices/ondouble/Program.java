@@ -97,14 +97,14 @@ public class Program {
             long startTime = System.currentTimeMillis();
             System.out.println("Loading matrices from file...");
             matrices = MatrixImporter.importFromFile("sample-matrices.txt");
-            keepOnlyXMatrices(1000);
+            keepOnlyXMatrices(100);
             System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 
-//            startTime = System.currentTimeMillis();
-//            System.out.println("Multiplying without threads...");
-//            MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()]));
-////            System.out.println(MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()])));
-//            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+            startTime = System.currentTimeMillis();
+            System.out.println("Multiplying without threads...");
+            MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()]));
+//            System.out.println(MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()])));
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 //
 //            startTime = System.currentTimeMillis();
 //            System.out.println("Multiplying using threads (thread by pair)...");
@@ -121,6 +121,7 @@ public class Program {
             startTime = System.currentTimeMillis();
             System.out.println("Multiplying using dynamic programming...");
             multiplyWithDynamicProgrammingWOThreads();
+//            System.out.println(multiplyWithDynamicProgrammingWOThreads());
             System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 
             System.out.println();
