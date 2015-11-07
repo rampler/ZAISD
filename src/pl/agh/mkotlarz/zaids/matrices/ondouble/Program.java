@@ -1,8 +1,6 @@
 package pl.agh.mkotlarz.zaids.matrices.ondouble;
 
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,17 +20,17 @@ public class Program {
         LinkedList<Matrix> matrices = new LinkedList<>(Program.matrices);
 
         while(matrices.size() != 1) {
-            Matrix[] newMatrixes;
+            Matrix[] newMatrices;
             if(matrices.size() % 2 == 1) {
-                newMatrixes = new Matrix[matrices.size() / 2 + 1];
-                newMatrixes[matrices.size()/2] = matrices.getLast();
+                newMatrices = new Matrix[matrices.size() / 2 + 1];
+                newMatrices[matrices.size()/2] = matrices.getLast();
             }
             else
-                newMatrixes = new Matrix[matrices.size()/2];
+                newMatrices = new Matrix[matrices.size()/2];
 
             LinkedList<Thread> threads = new LinkedList<>();
             for (int i = 0; i < matrices.size() / 2; i++) {
-                MatrixMultiplierThread thread = new MatrixMultiplierThread(matrices.get(2*i), matrices.get(2*i+1), i, newMatrixes);
+                MatrixMultiplierThread thread = new MatrixMultiplierThread(matrices.get(2*i), matrices.get(2*i+1), i, newMatrices);
                 threads.add(thread);
                 thread.start();
             }
@@ -41,7 +39,7 @@ public class Program {
                 thread.join();
 
             matrices = new LinkedList<>();
-            for(Matrix matrix : newMatrixes)
+            for(Matrix matrix : newMatrices)
                 matrices.add(matrix);
         }
 
@@ -72,16 +70,26 @@ public class Program {
         return MatrixUtilities.multiplyArrayOfMatrices(matrices);
     }
 
+    /**
+     * Calculating the minimal multiples and multiply matrices with that order
+     * No extra threads
+     */
+    public static Matrix multiplyWithDynamicProgrammingWOThreads(){
+        int[][] splitters = MatrixUtilities.calculateSplittersMatrix(matrices);
+        Matrix[] matricesArray = matrices.toArray(new Matrix[matrices.size()]);
+        MatrixUtilities.multiplyMatricesInSplittersOrders(matricesArray, splitters, 0, splitters.length-1);
+        return matricesArray[0];
+    }
 
     /**
      * Only for tests - to delete in future
      */
-    private static void keepOnlyXMatrixes(int x){
-        LinkedList<Matrix> newMatrixes = new LinkedList<>();
+    private static void keepOnlyXMatrices(int x){
+        LinkedList<Matrix> newMatrices = new LinkedList<>();
         for (int i = 0; i < x; i++)
-            newMatrixes.add(matrices.get(i));
+            newMatrices.add(matrices.get(i));
 
-        matrices = newMatrixes;
+        matrices = newMatrices;
     }
 
     public static void main(String[] args) {
@@ -89,25 +97,30 @@ public class Program {
             long startTime = System.currentTimeMillis();
             System.out.println("Loading matrices from file...");
             matrices = MatrixImporter.importFromFile("sample-matrices.txt");
-            keepOnlyXMatrixes(200);
+            keepOnlyXMatrices(1000);
             System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 
-            startTime = System.currentTimeMillis();
-            System.out.println("Multiplying without threads...");
-            MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()]));
-//            System.out.println(MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()])));
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+//            startTime = System.currentTimeMillis();
+//            System.out.println("Multiplying without threads...");
+//            MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()]));
+////            System.out.println(MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()])));
+//            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+//
+//            startTime = System.currentTimeMillis();
+//            System.out.println("Multiplying using threads (thread by pair)...");
+//            multiplyWithThreads();
+////            System.out.println(multiplyWithThreads());
+//            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+//
+//            startTime = System.currentTimeMillis();
+//            System.out.println("Multiplying using available processes...");
+//            multiplyWithAvailableProcesses();
+////            System.out.println(multiplyWithAvailableProcesses());
+//            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 
             startTime = System.currentTimeMillis();
-            System.out.println("Multiplying using threads (thread by pair)...");
-            multiplyWithThreads();
-//            System.out.println(multiplyWithThreads());
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
-
-            startTime = System.currentTimeMillis();
-            System.out.println("Multiplying using available processes...");
-            multiplyWithAvailableProcesses();
-//            System.out.println(multiplyWithAvailableProcesses());
+            System.out.println("Multiplying using dynamic programming...");
+            multiplyWithDynamicProgrammingWOThreads();
             System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 
             System.out.println();
@@ -118,7 +131,7 @@ public class Program {
         }
     }
 
-    private static void initializeMatrixes(){
+    private static void initializeMatrices(){
         for (int i = 0; i < 10; i++) {
             double[][] matrix = new double[10][10];
             for (int j = 0; j < matrix.length; j++)
