@@ -37,12 +37,12 @@ public class MatrixUtilities {
     }
 
 
-    public static int[][] calculateSplittersMatrix(LinkedList<Matrix> matrices) {
-        int[] dimensionsArray = new int[matrices.size()+1];
+    public static int[][] calculateSplittersMatrix(Matrix[] matrices) {
+        int[] dimensionsArray = new int[matrices.length+1];
 
-        for (int i = 0; i < matrices.size(); i++)
-            dimensionsArray[i] = matrices.get(i).getRowsCount();
-        dimensionsArray[dimensionsArray.length-1] = matrices.getLast().getColumnsCount();
+        for (int i = 0; i < matrices.length; i++)
+            dimensionsArray[i] = matrices[i].getRowsCount();
+        dimensionsArray[dimensionsArray.length-1] = matrices[matrices.length-1].getColumnsCount();
 
         int n = dimensionsArray.length - 1;
         int[][] minCosts = new int[n][n];
@@ -68,7 +68,22 @@ public class MatrixUtilities {
         if (i != j) {
             multiplyMatricesInSplittersOrders(matrices, splitters, i, splitters[i][j]);
             multiplyMatricesInSplittersOrders(matrices, splitters, splitters[i][j] + 1, j);
-//            System.out.println(" A_" + i + istr + "* A_" + j + jstr);
+            matrices[i] = multiplyMatrices(matrices[i], matrices[j]);
+            matrices[j] = matrices[i];
+        }
+    }
+
+    public static void multiplyMatricesInSplittersOrdersWithThreads(Matrix[] matrices, int[][] splitters, int i, int j) throws InterruptedException {
+        if (i != j) {
+            Thread thread1 = new Thread(()->multiplyMatricesInSplittersOrders(matrices, splitters, i, splitters[i][j]));
+//            Thread thread2 = new Thread(()->multiplyMatricesInSplittersOrders(matrices, splitters, splitters[i][j] + 1, j));
+            multiplyMatricesInSplittersOrders(matrices, splitters, splitters[i][j] + 1, j);
+
+            thread1.start();
+//            thread2.start();
+            thread1.join();
+//            thread2.join();
+
             matrices[i] = multiplyMatrices(matrices[i], matrices[j]);
             matrices[j] = matrices[i];
         }
