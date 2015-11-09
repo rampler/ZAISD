@@ -55,10 +55,12 @@ public class Program {
         ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         Future<Matrix>[] resultsSet = new Future[availableProcessors];
 
+        Matrix[] matricesArray = matrices.toArray(new Matrix[matrices.size()]);
+
         for (int i = 0; i < availableProcessors; i++) {
             int startPosition = (matrices.size() / availableProcessors) * i;
             int endPosition = (matrices.size() / availableProcessors) * (i + 1) - 1;
-            resultsSet[i] = (pool.submit(new MatrixMultiplierCallable(matrices.toArray(new Matrix[matrices.size()]), startPosition, endPosition)));
+            resultsSet[i] = (pool.submit(new MatrixMultiplierCallable(matricesArray, startPosition, endPosition)));
         }
 
         Matrix[] matrices = new Matrix[availableProcessors];
@@ -68,6 +70,36 @@ public class Program {
 
         pool.shutdown();
         return MatrixUtilities.multiplyArrayOfMatrices(matrices);
+    }
+
+    /**
+     * Create Executor with parametrized number of threads;
+     */
+    private static Matrix multiplyWithXThreads(int x) throws ExecutionException, InterruptedException {
+
+        ExecutorService pool = Executors.newFixedThreadPool(x);
+        Future<Matrix>[] resultsSet = new Future[x];
+
+        Matrix[] matricesArray = matrices.toArray(new Matrix[matrices.size()]);
+
+        for (int i = 0; i < x; i++) {
+            int startPosition = (matrices.size() / x) * i;
+            int endPosition = (matrices.size() / x) * (i + 1) - 1;
+            resultsSet[i] = (pool.submit(new MatrixMultiplierCallable(matricesArray, startPosition, endPosition)));
+        }
+
+        int diff = matrices.size() - 1 - ((matrices.size() / x) * x - 1);
+        Matrix[] finalMatrices = new Matrix[x+diff];
+
+        for(int i=0; i<diff; i++)
+            finalMatrices[x+i] = matricesArray[matrices.size()-diff+i];
+
+        int i=0;
+        for(Future<Matrix> elem : resultsSet)
+            finalMatrices[i++] = elem.get();
+
+        pool.shutdown();
+        return MatrixUtilities.multiplyArrayOfMatrices(finalMatrices);
     }
 
     /**
@@ -116,8 +148,10 @@ public class Program {
             long startTime = System.currentTimeMillis();
             System.out.println("Loading matrices from file...");
             matrices = MatrixImporter.importFromFile("sample-matrices.txt");
-            keepOnlyXMatrices(1000);
             System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+
+//            keepOnlyXMatrices(200);
+
 
             startTime = System.currentTimeMillis();
             System.out.println("Multiplying without threads...");
@@ -136,6 +170,18 @@ public class Program {
             multiplyWithAvailableProcesses();
 //            System.out.println(multiplyWithAvailableProcesses());
             System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+
+
+            for (int i = 2; i <= 128; i*=2) {
+                startTime = System.currentTimeMillis();
+                multiplyWithXThreads(i);
+//                System.out.println(multiplyWithXThreads(i));
+                System.out.println("Threads count: "+i+" Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            }
+            System.out.println();
+
+            keepOnlyXMatrices(1000);
+
 
             startTime = System.currentTimeMillis();
             System.out.println("Multiplying using dynamic programming WO threads...");
