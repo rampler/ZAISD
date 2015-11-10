@@ -33,7 +33,7 @@ public class MatrixImporter {
                 tempMatrix.add(new LinkedList<Double>());
 
                 for(String value : values)
-                    tempMatrix.getLast().add(new Double(value));
+                    tempMatrix.getLast().add(new Double(value)/8);
             }
         }
 

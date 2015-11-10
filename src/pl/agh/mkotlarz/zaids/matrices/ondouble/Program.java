@@ -172,7 +172,7 @@ public class Program {
             System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
 
 
-            for (int i = 2; i <= 128; i*=2) {
+            for (int i = 2; i <= 2048; i*=2) {
                 startTime = System.currentTimeMillis();
                 multiplyWithXThreads(i);
 //                System.out.println(multiplyWithXThreads(i));
