@@ -1,10 +1,8 @@
 package pl.agh.mkotlarz.zaids.matrices.ondouble;
 
 import java.util.LinkedList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * Created by Mateusz on 03.11.2015.
@@ -132,6 +130,50 @@ public class Program {
         return matricesArray[0];
     }
 
+    public static Matrix multiplyWithDynamicProgrammingWOThreads2(){
+        long startTime = System.currentTimeMillis();
+        Matrix[] results = new Matrix[100];
+        Matrix[] matricesArray = matrices.toArray(new Matrix[matrices.size()]);
+        for (int i = 0; i < 100; i++) {
+            Matrix[] tempMatrix = new Matrix[100];
+            System.arraycopy(matricesArray,100*i, tempMatrix, 0, 100);
+
+            int[][] splitters = MatrixUtilities.calculateSplittersMatrix(tempMatrix);
+//            System.out.println("-- Ordering multiplies time: "+(System.currentTimeMillis()-startTime)+" ms");
+            startTime = System.currentTimeMillis();
+            MatrixUtilities.multiplyMatricesInSplittersOrders(tempMatrix, splitters, 0, splitters.length-1);
+//            System.out.println("-- Multiplying time: "+(System.currentTimeMillis()-startTime)+" ms");
+            results[i] = tempMatrix[0];
+        }
+        return MatrixUtilities.multiplyArrayOfMatrices(results);
+    }
+
+    public static Matrix multiplyWithDynamicProgrammingWithThreads2() throws InterruptedException {
+        long startTime = System.currentTimeMillis();
+        Matrix[] results = new Matrix[100];
+        Matrix[] matricesArray = matrices.toArray(new Matrix[matrices.size()]);
+        Thread[] threads = new Thread[100];
+        for (int i = 0; i < 100; i++) {
+            final int ii = i;
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Matrix[] tempMatrix = new Matrix[100];
+                    System.arraycopy(matricesArray,100*ii, tempMatrix, 0, 100);
+                    int[][] splitters = MatrixUtilities.calculateSplittersMatrix(tempMatrix);
+                    MatrixUtilities.multiplyMatricesInSplittersOrders(tempMatrix, splitters, 0, splitters.length-1);
+                    results[ii] = tempMatrix[0];
+                }
+            });
+            threads[i] = thread;
+            thread.start();
+        }
+        for (int i = 0; i < threads.length; i++)
+            threads[i].join();
+
+        return MatrixUtilities.multiplyArrayOfMatrices(results);
+    }
+
     /**
      * Only for tests - to delete in future
      */
@@ -157,19 +199,22 @@ public class Program {
             System.out.println("Multiplying without threads...");
             MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()]));
 //            System.out.println(MatrixUtilities.multiplyArrayOfMatrices(matrices.toArray(new Matrix[matrices.size()])));
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+            double secTime = (System.currentTimeMillis()-startTime);
+            System.out.println("Time: "+secTime+" ms\n");
 
             startTime = System.currentTimeMillis();
             System.out.println("Multiplying using threads (thread by pair)...");
             multiplyWithThreads();
 //            System.out.println(multiplyWithThreads());
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            System.out.println("Diff: "+(secTime/(System.currentTimeMillis()-startTime))+"\n");
 
             startTime = System.currentTimeMillis();
             System.out.println("Multiplying using available processes...");
             multiplyWithAvailableProcesses();
 //            System.out.println(multiplyWithAvailableProcesses());
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            System.out.println("Diff: "+(secTime/(System.currentTimeMillis()-startTime))+"\n");
 
 
             for (int i = 2; i <= 2048; i*=2) {
@@ -180,20 +225,37 @@ public class Program {
             }
             System.out.println();
 
-            keepOnlyXMatrices(1000);
+            startTime = System.currentTimeMillis();
+            System.out.println("Multiplying using dynamic programming WO threads - 100 parts...");
+            multiplyWithDynamicProgrammingWOThreads2();
+//            System.out.println(multiplyWithDynamicProgrammingWOThreads2());
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            System.out.println("Diff: "+(secTime/(System.currentTimeMillis()-startTime))+"\n");
 
+            startTime = System.currentTimeMillis();
+            System.out.println("Multiplying using dynamic programming With threads - 100 parts...");
+            multiplyWithDynamicProgrammingWithThreads2();
+//            System.out.println(multiplyWithDynamicProgrammingWithThreads2());
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            System.out.println("Diff: "+(secTime/(System.currentTimeMillis()-startTime))+"\n");
+
+            keepOnlyXMatrices(1000);
 
             startTime = System.currentTimeMillis();
             System.out.println("Multiplying using dynamic programming WO threads...");
             multiplyWithDynamicProgrammingWOThreads();
 //            System.out.println(multiplyWithDynamicProgrammingWOThreads());
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            System.out.println("Diff: "+(secTime/(System.currentTimeMillis()-startTime))+"\n");
+
 
             startTime = System.currentTimeMillis();
             System.out.println("Multiplying using dynamic programming With threads...");
             multiplyWithDynamicProgrammingWithThreads();
 //            System.out.println(multiplyWithDynamicProgrammingWithThreads());
-            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms\n");
+            System.out.println("Time: "+(System.currentTimeMillis()-startTime)+" ms");
+            System.out.println("Diff: "+(secTime/(System.currentTimeMillis()-startTime))+"\n");
+
 
             System.out.println();
             System.out.println();
